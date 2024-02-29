@@ -1,0 +1,213 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Downloader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+</head>
+<body>
+
+    <h1>Image Downloader</h1>
+    
+    <label for="deviceId">Device ID:</label>
+    <input type="text" id="deviceId" placeholder="Enter Device ID">
+
+    <label for="date">Select Date:</label>
+    <input type="date" id="date">
+
+    <button onclick="downloadImages()">Download Images as Zip</button>
+    <p id="loadingMessage" style="display: none;">Your download is starting soon...</p>
+
+    <script>
+        function downloadImages() {
+            const deviceId = document.getElementById('deviceId').value;
+            const selectedDate = document.getElementById('date').value;
+
+            if (!deviceId || !selectedDate) {
+                alert('Please enter Device ID and select a date.');
+                return;
+            }
+
+            document.getElementById('loadingMessage').style.display = 'block';
+
+            // Format the date in the required format (29-02-2024)
+            const formattedDate = selectedDate.split('-').reverse().join('-');
+
+            // Construct the API URL with user input
+            const apiUrl = `https://tulp6xq61c.execute-api.us-east-1.amazonaws.com/dep/images?device=${deviceId}&date=${formattedDate}`;
+
+            // Fetch data from the API
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract image URLs from the API response
+                    const imageUrls = JSON.parse(data.body).images;
+
+                    // Use JSZip to create a zip file
+                    const zip = new JSZip();
+
+                    // Add each image to the zip file
+                    const promises = imageUrls.map((imageUrl, index) => {
+                        const fileName = `image_${index + 1}.jpg`;
+                        return zip.file(fileName, fetch(imageUrl).then(response => response.blob()));
+                    });
+
+                    // Wait for all image downloads to complete
+                    Promise.all(promises)
+                        .then(() => {
+                            // Generate the zip file and trigger download
+                            zip.generateAsync({ type: 'blob' })
+                                .then(blob => {
+                                    const link = document.createElement('a');
+                                    link.href = URL.createObjectURL(blob);
+                                    link.download = 'images.zip';
+                                    link.click();
+                                    document.getElementById('loadingMessage').style.display = 'none';
+                                });
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching data from the API:', error);
+                    document.getElementById('loadingMessage').style.display = 'none';
+                });
+        }
+    </script>
+
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Downloader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #cfe8d6; /* Light greenish background */
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #226666; /* Dark teal text */
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #226666; /* Dark teal text */
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            box-sizing: border-box;
+            border: 1px solid #226666; /* Dark teal border */
+        }
+
+        button {
+            background-color: #226666; /* Dark teal background */
+            color: #ffffff; /* White text */
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #144d4d; /* Slightly darker teal on hover */
+        }
+
+        #loadingMessage {
+            display: none;
+            color: #226666; /* Dark teal text */
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Image Downloader</h1>
+    
+    <label for="deviceId">Device ID:</label>
+    <input type="text" id="deviceId" placeholder="Enter Device ID">
+
+    <label for="date">Select Date:</label>
+    <input type="date" id="date">
+
+    <button onclick="downloadImages()">Download Images as Zip</button>
+    <p id="loadingMessage">Your download is starting soon...</p>
+
+    <script>
+        function downloadImages() {
+            const deviceId = document.getElementById('deviceId').value;
+            const selectedDate = document.getElementById('date').value;
+
+            if (!deviceId || !selectedDate) {
+                alert('Please enter Device ID and select a date.');
+                return;
+            }
+
+            document.getElementById('loadingMessage').style.display = 'block';
+
+            // Format the date in the required format (29-02-2024)
+            const formattedDate = selectedDate.split('-').reverse().join('-');
+
+            // Construct the API URL with user input
+            const apiUrl = `https://tulp6xq61c.execute-api.us-east-1.amazonaws.com/dep/images?device=${deviceId}&date=${formattedDate}`;
+
+            // Fetch data from the API
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract image URLs from the API response
+                    const imageUrls = JSON.parse(data.body).images;
+
+                    // Use JSZip to create a zip file
+                    const zip = new JSZip();
+
+                    // Add each image to the zip file
+                    const promises = imageUrls.map((imageUrl, index) => {
+                        const fileName = `image_${index + 1}.jpg`;
+                        return zip.file(fileName, fetch(imageUrl).then(response => response.blob()));
+                    });
+
+                    // Wait for all image downloads to complete
+                    Promise.all(promises)
+                        .then(() => {
+                            // Generate the zip file and trigger download
+                            zip.generateAsync({ type: 'blob' })
+                                .then(blob => {
+                                    const link = document.createElement('a');
+                                    link.href = URL.createObjectURL(blob);
+                                    link.download = 'images.zip';
+                                    link.click();
+                                    document.getElementById('loadingMessage').style.display = 'none';
+                                });
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching data from the API:', error);
+                    document.getElementById('loadingMessage').style.display = 'none';
+                });
+        }
+    </script>
+
+</body>
+</html>
